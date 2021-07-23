@@ -339,7 +339,7 @@ h1, h2, h3, h4, h5, h6 {
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  padding: 30px 0;
   overflow: hidden;
 }
 
@@ -1158,7 +1158,7 @@ section {
 #footer p {
   font-size: 15;
   padding: 0;
-  margin: 0 0 40px 0;
+  margin: 0 0 20px 0;
 }
 
 #footer .social-links {
@@ -1237,4 +1237,14 @@ section {
   .foo-img{
     width:80%
   }
+}
+
+#prof-me{
+  text-align: center;
+    padding: 15px;
+    background-color: rgb(186 211 249 / 25%);
+    border-radius: 10px;
+    margin: 1rem;
+    /* box-shadow: 2px 2px 6px 2px #49505729; */
+    box-shadow: 0px 0 20px rgb(69 80 91 / 9%);
 }
