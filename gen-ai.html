@@ -38,18 +38,22 @@
       }
       li {
         margin-bottom: 2em;
-        padding: 1.5em;
+        padding: 1em;
         background-color: #ffffff;
         border: 1px solid #e0e0e0;
-        border-radius: 6px;
+        border-radius: 8px;
         position: relative;
         counter-increment: item-counter;
+        display: flex;
+        align-items: flex-start;
+        overflow: hidden;
       }
       ol > li::before {
         content: counter(item-counter);
         position: absolute;
-        left: -1.5em;
-        top: 1.5em;
+        left: -2em;
+        top: 50%;
+        transform: translateY(-50%);
         background-color: #007bff;
         color: white;
         width: 1.5em;
@@ -58,6 +62,7 @@
         text-align: center;
         line-height: 1.5em;
         font-weight: bold;
+        z-index: 1;
       }
       ul li {
         background-color: #f9f9f9;
@@ -72,8 +77,11 @@
         text-decoration: none;
         color: #007bff;
         font-weight: bold;
-        display: inline-block;
-        margin-bottom: 0.5em;
+        display: block;
+        margin-bottom: 0.25em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
       a:hover {
         text-decoration: underline;
@@ -91,6 +99,48 @@
         text-align: center;
         margin-top: 2em;
         color: #777;
+      }
+      .card-thumbnail {
+        flex-shrink: 0;
+        width: 100px;
+        height: 75px;
+        margin-right: 1em;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .card-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .card-content {
+        flex-grow: 1;
+        min-width: 0;
+      }
+      .card-source {
+        font-size: 0.9em;
+        color: #666;
+        white-space: normal;
+        overflow: visible;
+        line-height: 1.4;
+      }
+      /* Hover effect for cards */
+      li:hover {
+        background-color: #f8f9fa; /* Light gray background on hover */
+        cursor: pointer; /* Indicate it's clickable */
+        border-color: #d3d3d3; /* Slightly darker border on hover */
+      }
+      /* Style for the title text inside the card */
+      .card-title {
+        font-weight: bold;
+        color: #333; /* Or use the link color: #007bff; */
+        margin-bottom: 0.25em;
+        margin-top: 0; /* Remove default paragraph margin */
+        /* Optional: Add truncation if needed */
+        /* white-space: nowrap; */
+        /* overflow: hidden; */
+        /* text-overflow: ellipsis; */
       }
     </style>
   </head>
@@ -126,30 +176,61 @@
         return videoId;
       }
 
-      // Function to create an HTML list item element
+      // Function to create an HTML list item element (Card Style)
       function createListItem(item) {
         const listItem = document.createElement("li");
 
-        const link = document.createElement("a");
-        link.href = item.url;
-        link.target = "_blank";
-        link.textContent = item.title;
-        listItem.appendChild(link);
+        // --- Thumbnail ---
+        const thumbnailContainer = document.createElement("div");
+        thumbnailContainer.className = "card-thumbnail";
 
         const videoId = getYouTubeVideoId(item.url);
         if (videoId) {
-          const iframe = document.createElement("iframe");
-          iframe.width = "560";
-          iframe.height = "315";
-          iframe.src = `https://www.youtube.com/embed/${videoId}`;
-          iframe.title = "YouTube video player";
-          iframe.frameborder = "0";
-          iframe.allow =
-            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-          iframe.referrerpolicy = "strict-origin-when-cross-origin";
-          iframe.allowFullscreen = true;
-          listItem.appendChild(iframe);
+          // Generate YouTube thumbnail URL
+          const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+          const img = document.createElement("img");
+          img.src = thumbnailUrl;
+          img.alt = `Thumbnail for ${item.title}`;
+          // Basic error handling: hide container if image fails to load
+          img.onerror = () => {
+            thumbnailContainer.style.display = "none";
+          };
+          thumbnailContainer.appendChild(img);
+        } else {
+          // Hide thumbnail container if it's not a YouTube video or ID extraction failed
+          thumbnailContainer.style.display = "none";
+          // Or you could add a placeholder SVG/image here instead
         }
+        listItem.appendChild(thumbnailContainer);
+
+        // --- Content (Title + Source) ---
+        const contentContainer = document.createElement("div");
+        contentContainer.className = "card-content";
+
+        // Title Text (not a link anymore)
+        const titleElement = document.createElement("p"); // Or use <span>
+        titleElement.className = "card-title"; // Add a class for potential styling
+        titleElement.textContent = item.title;
+        contentContainer.appendChild(titleElement);
+
+        // Description Text
+        const descriptionElement = document.createElement("p");
+        descriptionElement.className = "card-source"; // Keep existing class for styling
+        let descriptionText = "No description available";
+        if (item.description) {
+          descriptionText = item.description;
+        }
+        descriptionElement.textContent = descriptionText;
+        contentContainer.appendChild(descriptionElement);
+
+        listItem.appendChild(contentContainer);
+
+        // Make the entire list item clickable
+        listItem.addEventListener("click", () => {
+          if (item.url) {
+            window.open(item.url, "_blank");
+          }
+        });
 
         return listItem;
       }

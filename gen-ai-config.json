@@ -2,21 +2,25 @@
   {
     "level": 1,
     "title": "Fundamentals of Gen AI",
-    "url": "https://youtu.be/2IK3DFHRFfw?si=mRek4busmBuPGF2u"
+    "url": "https://youtu.be/2IK3DFHRFfw?si=mRek4busmBuPGF2u",
+    "description": "Intro to LLMs, how it works, a gist about training, types of models, Human V/S AI, prompt engg."
   },
   {
     "level": 1,
     "title": "How AI learn",
-    "url": "https://www.youtube.com/watch?v=R9OHn5ZF4Uo"
+    "url": "https://www.youtube.com/watch?v=R9OHn5ZF4Uo",
+    "description": "A story/conceptual understanding on how an AI actually learns. Irony: how it's done, nobody knows, infact even the model. A block box with complex wiring..."
   },
   {
-    "level": 2,
-    "title": "A joke from Silicon Valley",
-    "url": "https://www.youtube.com/watch?v=vIci3C4JkL0"
+    "level": 1,
+    "title": "Some fun time - Ft Silicon Valley",
+    "url": "https://www.youtube.com/watch?v=vIci3C4JkL0",
+    "description": "Jian Yang hotdog identification app. Lol..."
   },
   {
     "level": 1,
     "title": "Embedding and More - Deep dive into the transformers",
-    "url": "https://www.youtube.com/watch?v=wjZofJX0v4M"
+    "url": "https://www.youtube.com/watch?v=wjZofJX0v4M",
+    "description": "Buckle up, alot of math ahead. It's about the T is GPT. Vector embeddings, transformer under the hood, infer semantic search"
   }
 ]
