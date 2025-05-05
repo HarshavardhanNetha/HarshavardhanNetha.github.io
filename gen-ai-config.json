@@ -1,0 +1,22 @@
+[
+  {
+    "level": 1,
+    "title": "Fundamentals of Gen AI",
+    "url": "https://youtu.be/2IK3DFHRFfw?si=mRek4busmBuPGF2u"
+  },
+  {
+    "level": 1,
+    "title": "How AI learn",
+    "url": "https://www.youtube.com/watch?v=R9OHn5ZF4Uo"
+  },
+  {
+    "level": 2,
+    "title": "A joke from Silicon Valley",
+    "url": "https://www.youtube.com/watch?v=vIci3C4JkL0"
+  },
+  {
+    "level": 1,
+    "title": "Embedding and More - Deep dive into the transformers",
+    "url": "https://www.youtube.com/watch?v=wjZofJX0v4M"
+  }
+]

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gen AI Learning Path</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f7f6;
+        color: #333;
+      }
+      .container {
+        max-width: 800px;
+        margin: 2em auto;
+        padding: 2em;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5em;
+        color: #2c3e50;
+      }
+      ol {
+        list-style-type: none;
+        padding-left: 0;
+        counter-reset: item-counter;
+      }
+      ul {
+        list-style-type: none;
+        padding-left: 1.5em;
+        margin-top: 1em;
+      }
+      li {
+        margin-bottom: 2em;
+        padding: 1.5em;
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        position: relative;
+        counter-increment: item-counter;
+      }
+      ol > li::before {
+        content: counter(item-counter);
+        position: absolute;
+        left: -1.5em;
+        top: 1.5em;
+        background-color: #007bff;
+        color: white;
+        width: 1.5em;
+        height: 1.5em;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 1.5em;
+        font-weight: bold;
+      }
+      ul li {
+        background-color: #f9f9f9;
+        padding: 1em;
+        margin-left: 1em;
+        border-left: 3px solid #007bff;
+      }
+      ul li::before {
+        content: none;
+      }
+      a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 0.5em;
+      }
+      a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+      }
+      iframe {
+        display: block;
+        margin-top: 1em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        max-width: 100%;
+      }
+      p em {
+        display: block;
+        text-align: center;
+        margin-top: 2em;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Gen AI: Zero to Hero</h1>
+
+      <ol id="learning-path-list">
+        <!-- Content will be loaded dynamically -->
+      </ol>
+
+      <p><em>More content coming soon...</em></p>
+    </div>
+
+    <script>
+      // Function to extract YouTube Video ID from various URL formats
+      function getYouTubeVideoId(url) {
+        let videoId = null;
+        try {
+          const urlObj = new URL(url);
+          if (urlObj.hostname === "youtu.be") {
+            videoId = urlObj.pathname.slice(1);
+          } else if (urlObj.hostname.includes("youtube.com")) {
+            videoId = urlObj.searchParams.get("v");
+          }
+          // Remove potential query parameters from the extracted ID (like si=...)
+          if (videoId && videoId.includes("?")) {
+            videoId = videoId.split("?")[0];
+          }
+        } catch (e) {
+          console.error("Error parsing URL:", url, e);
+        }
+        return videoId;
+      }
+
+      // Function to create an HTML list item element
+      function createListItem(item) {
+        const listItem = document.createElement("li");
+
+        const link = document.createElement("a");
+        link.href = item.url;
+        link.target = "_blank";
+        link.textContent = item.title;
+        listItem.appendChild(link);
+
+        const videoId = getYouTubeVideoId(item.url);
+        if (videoId) {
+          const iframe = document.createElement("iframe");
+          iframe.width = "560";
+          iframe.height = "315";
+          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          iframe.title = "YouTube video player";
+          iframe.frameborder = "0";
+          iframe.allow =
+            "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+          iframe.referrerpolicy = "strict-origin-when-cross-origin";
+          iframe.allowFullscreen = true;
+          listItem.appendChild(iframe);
+        }
+
+        return listItem;
+      }
+
+      // Fetch the config and build the list
+      document.addEventListener("DOMContentLoaded", () => {
+        const listElement = document.getElementById("learning-path-list");
+        if (!listElement) {
+          console.error(
+            "Could not find list element with ID 'learning-path-list'"
+          );
+          return;
+        }
+
+        fetch("gen-ai-config.json")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            let currentList = listElement; // Start with the main OL
+            let lastMainListItem = null;
+
+            data.forEach((item) => {
+              const listItem = createListItem(item);
+
+              if (item.level === 1) {
+                listElement.appendChild(listItem); // Append main item to OL
+                lastMainListItem = listItem; // Keep track of the last main item
+                currentList = listElement; // Reset current list to main OL
+              } else if (item.level === 2 && lastMainListItem) {
+                // Find or create a UL inside the last main list item
+                let subList = lastMainListItem.querySelector("ul");
+                if (!subList) {
+                  subList = document.createElement("ul");
+                  lastMainListItem.appendChild(subList);
+                }
+                subList.appendChild(listItem); // Append sub item to UL
+                currentList = subList; // Set current list to the sublist
+              }
+              // Add more levels here if needed (e.g., level 3)
+              else {
+                console.warn(
+                  "Item level not supported or no preceding main item:",
+                  item
+                );
+                // As a fallback, append to the main list
+                listElement.appendChild(listItem);
+              }
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "Error loading or processing learning path config:",
+              error
+            );
+            listElement.innerHTML =
+              "<li>Error loading content. Please check the console.</li>";
+          });
+      });
+    </script>
+  </body>
+</html>
